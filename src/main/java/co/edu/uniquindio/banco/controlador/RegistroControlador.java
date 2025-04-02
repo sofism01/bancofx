@@ -1,6 +1,6 @@
 package co.edu.uniquindio.banco.controlador;
 
-import co.edu.uniquindio.banco.modelo.Banco;
+import co.edu.uniquindio.banco.modelo.entidades.Banco;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -42,15 +42,12 @@ public class RegistroControlador {
 
         try {
             // Se intenta agregar el usuario al banco
-            banco.agregarUsuario(
+            banco.registrarUsuario(
+                    txtIdentificacion.getText(),
                     txtNombre.getText(),
                     txtDireccion.getText(),
-                    txtIdentificacion.getText(),
                     txtCorreo.getText(),
                     txtPassword.getText() );
-
-            // Se intenta agregar una cuenta de ahorros al usuario
-            banco.agregarCuentaAhorros(txtIdentificacion.getText(), 0F);
 
             // Se muestra un mensaje de éxito y se cierra la ventana
             crearAlerta("Usuario registrado correctamente", Alert.AlertType.INFORMATION);

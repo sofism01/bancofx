@@ -1,4 +1,4 @@
-package co.edu.uniquindio.banco.app;
+package co.edu.uniquindio.banco;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
