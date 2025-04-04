@@ -9,7 +9,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <VBox prefHeight="600.0" prefWidth="800.0" spacing="30.0" style="-fx-padding: 30" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.uniquindio.banco.controlador.PanelClienteControlador">
    <children>
       <Label text="Panel principal de administración">
@@ -18,11 +17,11 @@
          </font>
       </Label>
       <Label text="Bienvenido a su banco, aquí podrá ver sus transacciones" />
-      <TableView prefHeight="282.0" prefWidth="700.0">
+      <TableView prefHeight="282.0" prefWidth="716.0">
         <columns>
           <TableColumn prefWidth="140.0" text="Tipo" />
-          <TableColumn  prefWidth="140.0" text="Fecha" />
-            <TableColumn  prefWidth="140.0" text="Valor" />
+          <TableColumn prefWidth="140.0" text="Fecha" />
+            <TableColumn prefWidth="140.0" text="Valor" />
             <TableColumn prefWidth="140.0" text="Usuario" />
             <TableColumn prefWidth="140.0" text="Categoría" />
         </columns>
