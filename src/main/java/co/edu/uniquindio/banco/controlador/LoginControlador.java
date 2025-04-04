@@ -1,6 +1,7 @@
 package co.edu.uniquindio.banco.controlador;
 
 import co.edu.uniquindio.banco.modelo.entidades.Banco;
+import co.edu.uniquindio.banco.modelo.entidades.Usuario;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +16,7 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.UUID;
 
 /**
  * Clase que representa el controlador de la vista de login
@@ -37,16 +39,22 @@ public class LoginControlador {
     @FXML
     private TextField txtNumeroId;
 
+    private final Banco banco = Banco.getInstancia();
 
     @FXML
     void iniciarSesion(ActionEvent event) {
         String id = txtNumeroId.getText();
         String password = txtContrasena.getText();
       try{
-          Banco banco = new Banco();
-          if(banco.validarLogin(id,password)){
-             navegarVentana("/login.fxml", "Banco - login");
+
+          Usuario usuario = banco.validarLogin(id,password);
+
+          if(usuario!=null){
+             navegarVentana("/panelCliente.fxml", "Banco - login", usuario);
           }
+
+
+
 
           limpiarCampos();
 
@@ -73,12 +81,16 @@ public class LoginControlador {
 
     }
 
-    public void navegarVentana(String nombreArchivoFxml, String tituloVentana) {
+    public void navegarVentana(String nombreArchivoFxml, String tituloVentana, Usuario usuario) {
         try {
 
             // Cargar la vista
             FXMLLoader loader = new FXMLLoader(getClass().getResource(nombreArchivoFxml));
             Parent root = loader.load();
+
+            //Accedemos al controlador del panel cliente
+            PanelClienteControlador controlador = loader.getController();
+            controlador.inicializarValores(usuario);
 
             // Crear la escena
             Scene scene = new Scene(root);
@@ -97,9 +109,6 @@ public class LoginControlador {
         }
     }
 
-    public void cerrarVentana(){
-        Stage stage = (Stage) txtNumeroId.getScene().getWindow();
-        stage.close();
-    }
+
 
 }

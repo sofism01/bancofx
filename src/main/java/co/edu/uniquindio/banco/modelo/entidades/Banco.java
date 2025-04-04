@@ -23,10 +23,28 @@ public class Banco {
 
     private List<Usuario> usuarios;
     private List<BilleteraVirtual> billeteras;
+    public static Banco INSTANCIA;
 
-    public Banco(){
+    //singleton
+    public static Banco getInstancia(){
+        if(INSTANCIA == null){
+            INSTANCIA = new Banco();
+        }
+        return INSTANCIA;
+    }
+
+
+
+    private Banco() throws Exception {
         this.usuarios = new ArrayList<>();
         this.billeteras = new ArrayList<>();
+        registrarUsuario("123", "Laura", "Calle 1", "lau@gmail.com", "123");
+        System.out.println();
+        registrarUsuario("456", "Sofia", "Calle 2", "sofia@gmail.com", "456");
+        System.out.println();
+        registrarUsuario("789", "Peper", "Calle 3", "peper@gmail.com", "789");
+        System.out.println();
+
     }
 
     /**
@@ -243,16 +261,16 @@ public class Banco {
         return billetera.obtenerPorcentajeGastosIngresos(mes, anio);
     }
 
-    public boolean validarLogin(String id, String password) throws Exception {
+    public Usuario validarLogin(String id, String password) throws Exception {
         if(id == null || id.isEmpty() || password == null || password.isEmpty()){
             throw new Exception("Los campos son obligatorios");
         }
         for (Usuario usuario : usuarios) {
             if (usuario.getId().equals(id) && usuario.getPassword().equals(password)) {
-                return true;
+                return usuario;
             }
 
         }
-        return false;
+        return null;
     }
 }
