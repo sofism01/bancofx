@@ -26,7 +26,7 @@ public class Banco {
     public static Banco INSTANCIA;
 
     //singleton
-    public static Banco getInstancia(){
+    public static Banco getInstancia()  {
         if(INSTANCIA == null){
             INSTANCIA = new Banco();
         }
@@ -35,18 +35,21 @@ public class Banco {
 
 
 
-    private Banco() throws Exception {
+    public Banco() {
         this.usuarios = new ArrayList<>();
         this.billeteras = new ArrayList<>();
-        registrarUsuario("123", "Laura", "Calle 1", "lau@gmail.com", "123");
-        System.out.println();
-        registrarUsuario("456", "Sofia", "Calle 2", "sofia@gmail.com", "456");
-        System.out.println();
-        registrarUsuario("789", "Peper", "Calle 3", "peper@gmail.com", "789");
-        System.out.println();
 
     }
 
+    public void crearDatosPrueba() throws Exception {
+        Banco banco = Banco.getInstancia();
+        banco.registrarUsuario("123", "Laura", "Calle 1", "lau@gmail.com", "123");
+        System.out.println();
+        banco.registrarUsuario("456", "Sofia", "Calle 2", "sofia@gmail.com", "456");
+        System.out.println();
+        banco.registrarUsuario("789", "Peper", "Calle 3", "peper@gmail.com", "789");
+        System.out.println();
+    }
     /**
      * Permite registrar un usuario en el banco y crear su billetera
      * @param id identificación del usuario
