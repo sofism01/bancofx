@@ -242,4 +242,17 @@ public class Banco {
         }
         return billetera.obtenerPorcentajeGastosIngresos(mes, anio);
     }
+
+    public boolean validarLogin(String id, String password) throws Exception {
+        if(id == null || id.isEmpty() || password == null || password.isEmpty()){
+            throw new Exception("Los campos son obligatorios");
+        }
+        for (Usuario usuario : usuarios) {
+            if (usuario.getId().equals(id) && usuario.getPassword().equals(password)) {
+                return true;
+            }
+
+        }
+        return false;
+    }
 }
