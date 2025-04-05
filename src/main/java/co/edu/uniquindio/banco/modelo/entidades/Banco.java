@@ -20,10 +20,10 @@ import java.util.UUID;
 @Getter
 @Setter
 public class Banco {
-
     private List<Usuario> usuarios;
     private List<BilleteraVirtual> billeteras;
     public static Banco INSTANCIA;
+
 
     //singleton
     public static Banco getInstancia()  {
@@ -33,22 +33,26 @@ public class Banco {
         return INSTANCIA;
     }
 
-
-
     public Banco() {
         this.usuarios = new ArrayList<>();
         this.billeteras = new ArrayList<>();
-
     }
+
+
 
     public void crearDatosPrueba() throws Exception {
         Banco banco = Banco.getInstancia();
-        banco.registrarUsuario("123", "Laura", "Calle 1", "lau@gmail.com", "123");
+
+        Usuario usuario1 = banco.registrarUsuario("123", "Laura", "Calle 1", "lau@gmail.com", "123");
+        BilleteraVirtual billetera1 = new BilleteraVirtual(Banco.getInstancia().crearNumeroBilletera(), 5000f, usuario1);
         System.out.println();
-        banco.registrarUsuario("456", "Sofia", "Calle 2", "sofia@gmail.com", "456");
+        Usuario usuario2 = banco.registrarUsuario("456", "Sofia", "Calle 2", "sofia@gmail.com", "456");
+        BilleteraVirtual billetera2 = new BilleteraVirtual(Banco.getInstancia().crearNumeroBilletera(), 2000f, usuario2);
         System.out.println();
-        banco.registrarUsuario("789", "Peper", "Calle 3", "peper@gmail.com", "789");
+        Usuario usuario3 = banco.registrarUsuario("789", "Peper", "Calle 3", "peper@gmail.com", "789");
+        BilleteraVirtual billetera3 = new BilleteraVirtual(Banco.getInstancia().crearNumeroBilletera(), 10000f, usuario3);
         System.out.println();
+
     }
     /**
      * Permite registrar un usuario en el banco y crear su billetera
@@ -59,7 +63,7 @@ public class Banco {
      * @param password contraseña del usuario
      * @throws Exception si el id, nombre, dirección, email o password son nulos o vacíos o si el usuario ya existe
      */
-    public void registrarUsuario(String id, String nombre, String direccion, String email, String password) throws Exception{
+    public Usuario registrarUsuario(String id, String nombre, String direccion, String email, String password) throws Exception{
 
         if(id == null || id.isEmpty()){
             throw new Exception("El id es obligatorio");
@@ -85,11 +89,17 @@ public class Banco {
             throw new Exception("El usuario ya existe");
         }
 
+        if (!email.contains("@") || email.indexOf("@") == 0 || email.lastIndexOf(".")
+                < email.indexOf("@") + 2 || email.endsWith(".")) {
+            throw new Exception("El email no tiene un formato válido");
+        }
+
         Usuario usuario = new Usuario(id, nombre, direccion, email, password);
         // Se agrega el usuario a la lista de usuarios
         usuarios.add(usuario);
         // Se registra la billetera del usuario
         registrarBilletera(usuario);
+        return usuario;
     }
 
     /**
@@ -267,6 +277,7 @@ public class Banco {
     public Usuario validarLogin(String id, String password) throws Exception {
         if(id == null || id.isEmpty() || password == null || password.isEmpty()){
             throw new Exception("Los campos son obligatorios");
+
         }
         for (Usuario usuario : usuarios) {
             if (usuario.getId().equals(id) && usuario.getPassword().equals(password)) {
@@ -274,6 +285,7 @@ public class Banco {
             }
 
         }
-        return null;
+        throw new Exception("ID o contraseña incorrectos.");
     }
+
 }

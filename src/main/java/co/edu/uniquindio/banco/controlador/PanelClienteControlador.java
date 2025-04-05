@@ -2,23 +2,49 @@ package co.edu.uniquindio.banco.controlador;
 
 import co.edu.uniquindio.banco.modelo.entidades.Banco;
 import co.edu.uniquindio.banco.modelo.entidades.BilleteraVirtual;
+import co.edu.uniquindio.banco.modelo.entidades.Transaccion;
 import co.edu.uniquindio.banco.modelo.entidades.Usuario;
+import co.edu.uniquindio.banco.modelo.enums.Categoria;
+import co.edu.uniquindio.banco.modelo.enums.TipoTransaccion;
 import co.edu.uniquindio.banco.modelo.vo.SaldoTransaccionesBilletera;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
+
+import java.time.LocalDateTime;
 
 /**
  * Clase que se encarga de gestionar las acciones de la interfaz gráfica del panel del cliente.
  * @author caflorezvi
  */
 public class PanelClienteControlador {
+
+
+    @FXML
+    private TableColumn<Transaccion, TipoTransaccion> colTipo;
+
+    @FXML
+    private TableColumn<Transaccion, Categoria> colCategoria;
+
+    @FXML
+    private TableColumn<Transaccion, LocalDateTime> colFecha;
+
+
+    @FXML
+    private TableColumn<Transaccion, Usuario> colUsuario;
+
+    @FXML
+    private TableColumn<Transaccion, Float> colValor;
+
+
+    @FXML
+    private TableView<Transaccion> tblTransacciones;
+
     @FXML
     private Button btnCerrarSesion;
 
@@ -111,6 +137,12 @@ public class PanelClienteControlador {
     public void cerrarVentana(){
         Stage stage = (Stage) btnCerrarSesion.getScene().getWindow();
         stage.close();
+    }
+
+
+    @FXML
+    void initialize() {
+
     }
 
 }

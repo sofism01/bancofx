@@ -1,5 +1,6 @@
 package co.edu.uniquindio.banco;
 
+import co.edu.uniquindio.banco.modelo.entidades.Banco;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -26,7 +27,9 @@ public class BancoApp extends Application {
         stage.show();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+        Banco banco = Banco.getInstancia();
+        banco.crearDatosPrueba();
         launch(BancoApp.class, args);
     }
 }
