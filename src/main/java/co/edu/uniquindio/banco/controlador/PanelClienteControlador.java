@@ -14,6 +14,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.time.LocalDateTime;
@@ -142,7 +143,10 @@ public class PanelClienteControlador {
 
     @FXML
     void initialize() {
-
+        colTipo.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTipo().toString()));
+        colFecha.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFecha().toString()));
+        colValor.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getMonto()));
+        colUsuario.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getClass()));
+        colCategoria.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTipo().toString()));
     }
-
 }

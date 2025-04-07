@@ -4,7 +4,18 @@ import lombok.Getter;
 
 @Getter
 public enum TipoTransaccion {
-    DEPOSITO , RETIRO;
+    DEPOSITO {
+        @Override
+        public String toString() {
+            return "DEPOSITO";
+        }
+    },
+    RETIRO {
+        @Override
+        public String toString() {
+            return "RETIRO";
+        }
+    }
 
     }
 
