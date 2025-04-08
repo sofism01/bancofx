@@ -44,15 +44,19 @@ public class Banco {
         Banco banco = Banco.getInstancia();
 
         Usuario usuario1 = banco.registrarUsuario("123", "Laura", "Calle 1", "lau@gmail.com", "123");
-        BilleteraVirtual billetera1 = new BilleteraVirtual(Banco.getInstancia().crearNumeroBilletera(), 5000f, usuario1);
-        System.out.println();
-        Usuario usuario2 = banco.registrarUsuario("456", "Sofia", "Calle 2", "sofia@gmail.com", "456");
-        BilleteraVirtual billetera2 = new BilleteraVirtual(Banco.getInstancia().crearNumeroBilletera(), 2000f, usuario2);
-        System.out.println();
-        Usuario usuario3 = banco.registrarUsuario("789", "Peper", "Calle 3", "peper@gmail.com", "789");
-        BilleteraVirtual billetera3 = new BilleteraVirtual(Banco.getInstancia().crearNumeroBilletera(), 10000f, usuario3);
-        System.out.println();
+        BilleteraVirtual billetera1 = banco.buscarBilleteraUsuario("123");
+        billetera1.setSaldo(10000);
+        System.out.println(billetera1);
 
+        Usuario usuario2 = banco.registrarUsuario("456", "Sofia", "Calle 2", "sofia@gmail.com", "456");
+        BilleteraVirtual billetera2 = banco.buscarBilleteraUsuario("456");
+        billetera2.setSaldo(8000);
+        System.out.println(billetera2);
+
+        Usuario usuario3 = banco.registrarUsuario("789", "Peper", "Calle 3", "peper@gmail.com", "789");
+        BilleteraVirtual billetera3 = banco.buscarBilleteraUsuario("789");
+        billetera3.setSaldo(5000);
+        System.out.println(billetera3);
     }
     /**
      * Permite registrar un usuario en el banco y crear su billetera
@@ -185,6 +189,7 @@ public class Banco {
                 .findFirst()
                 .orElse(null);
     }
+
 
     /**
      * Permite buscar un usuario por su id

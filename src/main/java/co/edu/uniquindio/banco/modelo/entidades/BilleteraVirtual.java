@@ -2,14 +2,18 @@ package co.edu.uniquindio.banco.modelo.entidades;
 
 import co.edu.uniquindio.banco.config.Constantes;
 import co.edu.uniquindio.banco.modelo.vo.PorcentajeGastosIngresos;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+@Setter
 public class BilleteraVirtual {
     private String numero;
     private float saldo;
     private Usuario usuario;
     private ArrayList<Transaccion> transacciones;
+
 
     public BilleteraVirtual(String numero, float saldo, Usuario usuario) {
         this.numero = numero;
@@ -100,4 +104,13 @@ public class BilleteraVirtual {
         return usuario;
     }
 
+    @Override
+    public String toString() {
+        return "BilleteraVirtual{" +
+                "numero='" + numero + '\'' +
+                ", saldo=" + saldo +
+                ", usuario=" + usuario +
+                ", transacciones=" + transacciones +
+                '}';
+    }
 }

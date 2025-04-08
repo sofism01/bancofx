@@ -27,20 +27,20 @@ public class PanelClienteControlador {
 
 
     @FXML
-    private TableColumn<Transaccion, TipoTransaccion> colTipo;
+    private TableColumn<Transaccion, String> colTipo;
 
     @FXML
-    private TableColumn<Transaccion, Categoria> colCategoria;
+    private TableColumn<Transaccion, String> colCategoria;
 
     @FXML
-    private TableColumn<Transaccion, LocalDateTime> colFecha;
+    private TableColumn<Transaccion, String> colFecha;
 
 
     @FXML
-    private TableColumn<Transaccion, Usuario> colUsuario;
+    private TableColumn<Transaccion, String> colUsuario;
 
     @FXML
-    private TableColumn<Transaccion, Float> colValor;
+    private TableColumn<Transaccion, String> colValor;
 
 
     @FXML
@@ -145,8 +145,8 @@ public class PanelClienteControlador {
     void initialize() {
         colTipo.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTipo().toString()));
         colFecha.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFecha().toString()));
-        colValor.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getMonto()));
-        colUsuario.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getClass()));
+        colValor.setCellValueFactory(cellData -> new SimpleStringProperty());
+        colUsuario.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getBilleteraDestino().getUsuario().toString()));
         colCategoria.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTipo().toString()));
     }
 }

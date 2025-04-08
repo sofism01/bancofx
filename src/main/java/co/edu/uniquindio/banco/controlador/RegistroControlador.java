@@ -46,7 +46,7 @@ public class RegistroControlador {
                     txtNombre.getText(),
                     txtDireccion.getText(),
                     txtCorreo.getText(),
-                    txtPassword.getText() );
+                    txtPassword.getText());
             // Se muestra un mensaje de éxito y se cierra la ventana
             crearAlerta("Usuario registrado correctamente", Alert.AlertType.INFORMATION);
             cerrarVentana();
