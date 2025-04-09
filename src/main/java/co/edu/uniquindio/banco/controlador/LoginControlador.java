@@ -53,9 +53,6 @@ public class LoginControlador {
              navegarVentana("/panelCliente.fxml", "Banco - login", usuario);
           }
 
-
-
-
           limpiarCampos();
 
         }catch (Exception e) {

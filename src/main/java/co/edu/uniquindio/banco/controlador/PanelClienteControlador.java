@@ -8,6 +8,8 @@ import co.edu.uniquindio.banco.modelo.enums.Categoria;
 import co.edu.uniquindio.banco.modelo.enums.TipoTransaccion;
 import co.edu.uniquindio.banco.modelo.vo.SaldoTransaccionesBilletera;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -67,6 +69,8 @@ public class PanelClienteControlador {
 
     private BilleteraVirtual billeteraVirtual;
 
+    private ObservableList<Transaccion> listaTransacciones = FXCollections.observableArrayList();
+
     public void inicializarValores(Usuario usuario){
         try {
             if(usuario != null){
@@ -109,12 +113,17 @@ public class PanelClienteControlador {
             // Cargar la vista
             FXMLLoader loader = new FXMLLoader(getClass().getResource(nombreArchivoFxml));
             Parent root = loader.load();
+            if (nombreArchivoFxml.equals("/transferencia.fxml")) {
+                TransferenciaControlador controlador = new TransferenciaControlador();
+                controlador.inicializarValores(usuario);
+            }
 
             // Crear la escena
             Scene scene = new Scene(root);
 
             // Crear un nuevo escenario (ventana)
             Stage stage = new Stage();
+            stage.setOnHiding(event -> actualizarTabla());
             stage.setScene(scene);
             stage.setResizable(false);
             stage.setTitle(tituloVentana);
@@ -148,5 +157,13 @@ public class PanelClienteControlador {
         colValor.setCellValueFactory(cellData -> new SimpleStringProperty());
         colUsuario.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getBilleteraDestino().getUsuario().toString()));
         colCategoria.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTipo().toString()));
+        tblTransacciones.setItems(listaTransacciones);
+    }
+
+
+
+    public void actualizarTabla(){
+        listaTransacciones.setAll(banco.obtenerTransacciones(billeteraVirtual.getNumero()));
+        tblTransacciones.setItems(listaTransacciones);
     }
 }
