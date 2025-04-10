@@ -5,12 +5,15 @@ import co.edu.uniquindio.banco.modelo.entidades.BilleteraVirtual;
 import co.edu.uniquindio.banco.modelo.entidades.Transaccion;
 import co.edu.uniquindio.banco.modelo.entidades.Usuario;
 import co.edu.uniquindio.banco.modelo.enums.Categoria;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
@@ -45,24 +48,39 @@ public class TransferenciaControlador implements Initializable {
 
     private Usuario usuario;
 
+    private ObservableList<Categoria> listaCategorias = FXCollections.observableArrayList();
+
     Banco banco = Banco.getInstancia();
 
-    private co.edu.uniquindio.banco.modelo.entidades.BilleteraVirtual BilleteraVirtual;
-    private BilleteraVirtual billeteraOrigen = BilleteraVirtual;
-    private final BilleteraVirtual billeteraDestino = BilleteraVirtual;
+    private BilleteraVirtual billeteraOrigen;
+
+
 
     @FXML
     void hacerTransferencia(ActionEvent event) throws Exception {
+        String numeroDestino = txtNumCuenta.getText();
+        BilleteraVirtual billeteraOrigen = banco.buscarBilletera(numeroDestino);
+
+
+        if (numeroDestino.isEmpty() || txtMonto.getText().isEmpty() || cmbCategoria == null) {
+            mostrarAlerta("Complete todos los campos y seleccione una opción de la categoría.", Alert.AlertType.WARNING);
+            return;
+
+        }
+        if (billeteraOrigen == null) {
+            mostrarAlerta("No se encontró una billetera con el número dado", Alert.AlertType.WARNING);
+            return;
+        }
+
+        float monto = Float.parseFloat(txtMonto.getText());
+        Categoria categoria = cmbCategoria.getValue();
+
+        banco.realizarTransferencia(billeteraOrigen.getNumero(), billeteraOrigen.getNumero(), monto, categoria);
+
         txtNumCuenta.clear();
         txtMonto.clear();
-        cmbCategoria.getItems().clear();
-
-        banco.realizarTransferencia(billeteraOrigen.getNumero(), billeteraDestino.getNumero(), Float.parseFloat(txtMonto.getText()), cmbCategoria.getValue());
+        cmbCategoria.getSelectionModel().clearSelection();;
     }
-
-
-
-
 
     public void cerrarVentana(){
         Stage stage = (Stage) btnTransferir.getScene().getWindow();
@@ -77,6 +95,14 @@ public class TransferenciaControlador implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        cmbCategoria.setItems(FXCollections.observableArrayList(Categoria.values()));
+    }
 
+    private void mostrarAlerta(String mensaje, Alert.AlertType tipo) {
+        Alert alert = new Alert(tipo);
+        alert.setTitle("Información");
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.show();
     }
 }

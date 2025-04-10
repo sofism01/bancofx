@@ -69,6 +69,7 @@ public class PanelClienteControlador {
 
     private BilleteraVirtual billeteraVirtual;
 
+
     private ObservableList<Transaccion> listaTransacciones = FXCollections.observableArrayList();
 
     public void inicializarValores(Usuario usuario){
@@ -131,10 +132,12 @@ public class PanelClienteControlador {
             // Mostrar la nueva ventana
             stage.show();
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
+
 
     private void mostrarAlerta(String mensaje, Alert.AlertType tipo) {
         Alert alert = new Alert(tipo);
@@ -152,10 +155,11 @@ public class PanelClienteControlador {
 
     @FXML
     void initialize() {
+
         colTipo.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTipo().toString()));
         colFecha.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFecha().toString()));
-        colValor.setCellValueFactory(cellData -> new SimpleStringProperty());
-        colUsuario.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getBilleteraDestino().getUsuario().toString()));
+        colValor.setCellValueFactory(cellData -> new SimpleStringProperty(""+cellData.getValue().getMonto()));
+        colUsuario.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getBilleteraOrigen().getUsuario().toString()));
         colCategoria.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTipo().toString()));
         tblTransacciones.setItems(listaTransacciones);
     }
