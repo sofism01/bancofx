@@ -1,10 +1,8 @@
 package co.edu.uniquindio.banco.controlador;
 
-import co.edu.uniquindio.banco.modelo.entidades.Banco;
-import co.edu.uniquindio.banco.modelo.entidades.BilleteraVirtual;
-import co.edu.uniquindio.banco.modelo.entidades.Transaccion;
-import co.edu.uniquindio.banco.modelo.entidades.Usuario;
+import co.edu.uniquindio.banco.modelo.entidades.*;
 import co.edu.uniquindio.banco.modelo.enums.Categoria;
+import co.edu.uniquindio.banco.observador.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -20,6 +18,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 /**
@@ -48,39 +47,41 @@ public class TransferenciaControlador implements Initializable {
 
     private Usuario usuario;
 
+    private Observable observable;
+
     private ObservableList<Categoria> listaCategorias = FXCollections.observableArrayList();
 
     Banco banco = Banco.getInstancia();
 
     private BilleteraVirtual billeteraOrigen;
 
+    Sesion sesion = Sesion.getInstancia();
+
+    private Cuenta cuenta;
+
 
 
     @FXML
     void hacerTransferencia(ActionEvent event) throws Exception {
-        String numeroDestino = txtNumCuenta.getText();
-        BilleteraVirtual billeteraOrigen = banco.buscarBilletera(numeroDestino);
+        try{
+            String numeroCuenta = txtNumCuenta.getText();
+            float monto = Float.parseFloat(txtMonto.getText());
+            Categoria categoria = cmbCategoria.getSelectionModel().getSelectedItem();
+            String billeteraOrigen = sesion.getCuenta().getNumeroCuenta();
 
-
-        if (numeroDestino.isEmpty() || txtMonto.getText().isEmpty() || cmbCategoria == null) {
-            mostrarAlerta("Complete todos los campos y seleccione una opción de la categoría.", Alert.AlertType.WARNING);
-            return;
-
+            if(numeroCuenta.isEmpty() || monto < 0 || categoria == null){
+                mostrarAlerta("Todos los campos son obligatorios", Alert.AlertType.ERROR);
+            }else{
+                banco.realizarTransferencia(billeteraOrigen, numeroCuenta, monto, categoria);
+                observable.notificar();
+                cerrarVentana();
+            }
+        }catch (Exception e){
+            mostrarAlerta(e.getMessage(), Alert.AlertType.ERROR);
         }
-        if (billeteraOrigen == null) {
-            mostrarAlerta("No se encontró una billetera con el número dado", Alert.AlertType.WARNING);
-            return;
-        }
-
-        float monto = Float.parseFloat(txtMonto.getText());
-        Categoria categoria = cmbCategoria.getValue();
-
-        banco.realizarTransferencia(billeteraOrigen.getNumero(), billeteraOrigen.getNumero(), monto, categoria);
-
-        txtNumCuenta.clear();
-        txtMonto.clear();
-        cmbCategoria.getSelectionModel().clearSelection();;
     }
+
+
 
     public void cerrarVentana(){
         Stage stage = (Stage) btnTransferir.getScene().getWindow();
@@ -104,5 +105,9 @@ public class TransferenciaControlador implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
         alert.show();
+    }
+
+    public void inicializarObservable(Observable observable) {
+this.observable = observable;
     }
 }

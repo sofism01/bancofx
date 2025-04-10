@@ -7,25 +7,30 @@ import co.edu.uniquindio.banco.modelo.entidades.Usuario;
 import co.edu.uniquindio.banco.modelo.enums.Categoria;
 import co.edu.uniquindio.banco.modelo.enums.TipoTransaccion;
 import co.edu.uniquindio.banco.modelo.vo.SaldoTransaccionesBilletera;
+import co.edu.uniquindio.banco.observador.Observable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.net.URL;
 import java.time.LocalDateTime;
+import java.util.ResourceBundle;
 
 /**
  * Clase que se encarga de gestionar las acciones de la interfaz gráfica del panel del cliente.
  * @author caflorezvi
  */
-public class PanelClienteControlador {
+public class PanelClienteControlador implements Initializable, Observable {
 
 
     @FXML
@@ -69,7 +74,6 @@ public class PanelClienteControlador {
 
     private BilleteraVirtual billeteraVirtual;
 
-
     private ObservableList<Transaccion> listaTransacciones = FXCollections.observableArrayList();
 
     public void inicializarValores(Usuario usuario){
@@ -89,7 +93,7 @@ public class PanelClienteControlador {
 
 
     @FXML
-    void cerrarSesion(ActionEvent event) {
+    void cerrarSesion(ActionEvent event) throws IOException {
         cerrarVentana();
         navegarVentana("/login.fxml", "Banco - login");
     }
@@ -103,21 +107,17 @@ public class PanelClienteControlador {
     }
 
     @FXML
-    void transferir(ActionEvent event) {
+    void transferir(ActionEvent event) throws IOException {
         navegarVentana("/transferencia.fxml", "Banco - transferir");
 
     }
 
-    public void navegarVentana(String nombreArchivoFxml, String tituloVentana) {
-        try {
+    public FXMLLoader navegarVentana(String nombreArchivoFxml, String tituloVentana) throws IOException {
+
 
             // Cargar la vista
             FXMLLoader loader = new FXMLLoader(getClass().getResource(nombreArchivoFxml));
             Parent root = loader.load();
-            if (nombreArchivoFxml.equals("/transferencia.fxml")) {
-                TransferenciaControlador controlador = new TransferenciaControlador();
-                controlador.inicializarValores(usuario);
-            }
 
             // Crear la escena
             Scene scene = new Scene(root);
@@ -131,10 +131,7 @@ public class PanelClienteControlador {
 
             // Mostrar la nueva ventana
             stage.show();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            return loader;
 
     }
 
@@ -169,5 +166,25 @@ public class PanelClienteControlador {
     public void actualizarTabla(){
         listaTransacciones.setAll(banco.obtenerTransacciones(billeteraVirtual.getNumero()));
         tblTransacciones.setItems(listaTransacciones);
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+
+    }
+
+    private void consultarTransacciones(){
+        tblTransacciones.setItems(FXCollections.observableArrayList(listaTransacciones));
+    }
+
+    public void irTransferencia() throws Exception{
+        FXMLLoader loader =  navegarVentana("/transferencia.fxml", "Banco - Transferencia");
+        TransferenciaControlador controlador = loader.getController();
+        controlador.inicializarObservable(this);
+    }
+
+    @Override
+    public void notificar() {
+        consultarTransacciones();
     }
 }
