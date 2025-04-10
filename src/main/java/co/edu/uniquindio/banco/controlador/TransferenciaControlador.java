@@ -49,16 +49,17 @@ public class TransferenciaControlador implements Initializable {
 
     private Observable observable;
 
-    private ObservableList<Categoria> listaCategorias = FXCollections.observableArrayList();
+    private ObservableList<Categoria> listaCategorias;
 
-    Banco banco = Banco.getInstancia();
+    private Banco banco;
 
-    private BilleteraVirtual billeteraOrigen;
+    private Sesion sesion;
 
-    Sesion sesion = Sesion.getInstancia();
-
-    private Cuenta cuenta;
-
+    public TransferenciaControlador(){
+        listaCategorias = FXCollections.observableArrayList();
+        banco = Banco.getInstancia();
+        sesion = Sesion.getInstancia();
+    }
 
 
     @FXML
@@ -67,7 +68,7 @@ public class TransferenciaControlador implements Initializable {
             String numeroCuenta = txtNumCuenta.getText();
             float monto = Float.parseFloat(txtMonto.getText());
             Categoria categoria = cmbCategoria.getSelectionModel().getSelectedItem();
-            String billeteraOrigen = sesion.getCuenta().getNumeroCuenta();
+            String billeteraOrigen = sesion.getBilleteraVirtual().getNumero();
 
             if(numeroCuenta.isEmpty() || monto < 0 || categoria == null){
                 mostrarAlerta("Todos los campos son obligatorios", Alert.AlertType.ERROR);
@@ -77,22 +78,16 @@ public class TransferenciaControlador implements Initializable {
                 cerrarVentana();
             }
         }catch (Exception e){
+            e.printStackTrace();
             mostrarAlerta(e.getMessage(), Alert.AlertType.ERROR);
         }
     }
-
 
 
     public void cerrarVentana(){
         Stage stage = (Stage) btnTransferir.getScene().getWindow();
         stage.close();
     }
-
-    public void inicializarValores(Usuario usuario){
-        this.usuario= usuario;
-        billeteraOrigen = banco.buscarBilleteraUsuario(usuario.getId());
-    }
-
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -108,6 +103,6 @@ public class TransferenciaControlador implements Initializable {
     }
 
     public void inicializarObservable(Observable observable) {
-this.observable = observable;
+        this.observable = observable;
     }
 }

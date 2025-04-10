@@ -1,9 +1,6 @@
 package co.edu.uniquindio.banco.controlador;
 
-import co.edu.uniquindio.banco.modelo.entidades.Banco;
-import co.edu.uniquindio.banco.modelo.entidades.BilleteraVirtual;
-import co.edu.uniquindio.banco.modelo.entidades.Transaccion;
-import co.edu.uniquindio.banco.modelo.entidades.Usuario;
+import co.edu.uniquindio.banco.modelo.entidades.*;
 import co.edu.uniquindio.banco.modelo.enums.Categoria;
 import co.edu.uniquindio.banco.modelo.enums.TipoTransaccion;
 import co.edu.uniquindio.banco.modelo.vo.SaldoTransaccionesBilletera;
@@ -65,27 +62,35 @@ public class PanelClienteControlador implements Initializable, Observable {
     @FXML
     private Label lblNombre;
 
-    private Usuario usuario;
+    private final Usuario usuario;
 
-    private Banco banco = Banco.getInstancia();
+    private final Banco banco;
 
     @FXML
     private Label lblNumCuenta;
 
     private BilleteraVirtual billeteraVirtual;
 
-    private ObservableList<Transaccion> listaTransacciones = FXCollections.observableArrayList();
+    private final ObservableList<Transaccion> listaTransacciones;
 
-    public void inicializarValores(Usuario usuario){
+    private final Sesion sesion;
+
+    public PanelClienteControlador(){
+        this.listaTransacciones = FXCollections.observableArrayList();
+        this.banco = Banco.getInstancia();
+        this.sesion = Sesion.getInstancia();
+        this.usuario = sesion.getUsuario();
+    }
+
+    public void inicializarValores(){
         try {
-            if(usuario != null){
-                this.usuario = usuario;
-                lblNombre.setText(usuario.getNombre()+" bienvenido a su banco, aquí podra ver sus transacciones");
+            System.out.println(usuario);
+            lblNombre.setText(usuario.getNombre()+" bienvenido a su banco, aquí podra ver sus transacciones");
 
-                billeteraVirtual =  banco.buscarBilleteraUsuario(usuario.getId());
+            billeteraVirtual =  banco.buscarBilleteraUsuario(usuario.getId());
+            sesion.setBilleteraVirtual(billeteraVirtual);
 
-                lblNumCuenta.setText(billeteraVirtual.getNumero() );
-            }
+            lblNumCuenta.setText(billeteraVirtual.getNumero() );
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -108,8 +113,11 @@ public class PanelClienteControlador implements Initializable, Observable {
 
     @FXML
     void transferir(ActionEvent event) throws IOException {
-        navegarVentana("/transferencia.fxml", "Banco - transferir");
-
+        try{
+            irTransferencia();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public FXMLLoader navegarVentana(String nombreArchivoFxml, String tituloVentana) throws IOException {
@@ -149,20 +157,6 @@ public class PanelClienteControlador implements Initializable, Observable {
         stage.close();
     }
 
-
-    @FXML
-    void initialize() {
-
-        colTipo.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTipo().toString()));
-        colFecha.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFecha().toString()));
-        colValor.setCellValueFactory(cellData -> new SimpleStringProperty(""+cellData.getValue().getMonto()));
-        colUsuario.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getBilleteraOrigen().getUsuario().toString()));
-        colCategoria.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTipo().toString()));
-        tblTransacciones.setItems(listaTransacciones);
-    }
-
-
-
     public void actualizarTabla(){
         listaTransacciones.setAll(banco.obtenerTransacciones(billeteraVirtual.getNumero()));
         tblTransacciones.setItems(listaTransacciones);
@@ -171,6 +165,13 @@ public class PanelClienteControlador implements Initializable, Observable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        inicializarValores();
+        colTipo.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTipo().toString()));
+        colFecha.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFecha().toString()));
+        colValor.setCellValueFactory(cellData -> new SimpleStringProperty(""+cellData.getValue().getMonto()));
+        colUsuario.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getBilleteraOrigen().getUsuario().getNombre()));
+        colCategoria.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTipo().toString()));
+        tblTransacciones.setItems(listaTransacciones);
     }
 
     private void consultarTransacciones(){

@@ -9,7 +9,10 @@ public class Sesion {
     @Getter
     @Setter
     private Usuario usuario;
-    private Cuenta cuenta;
+
+    @Getter
+    @Setter
+    private BilleteraVirtual billeteraVirtual;
 
     private Sesion() {
     }
@@ -25,10 +28,7 @@ public class Sesion {
 
     public void cerrarSesion() {
         usuario = null;
-
+        billeteraVirtual = null;
     }
 
-    public Cuenta getCuenta() {
-        return cuenta;
-    }
 }

@@ -1,6 +1,7 @@
 package co.edu.uniquindio.banco.controlador;
 
 import co.edu.uniquindio.banco.modelo.entidades.Banco;
+import co.edu.uniquindio.banco.modelo.entidades.Sesion;
 import co.edu.uniquindio.banco.modelo.entidades.Usuario;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -50,6 +51,9 @@ public class LoginControlador {
           Usuario usuario = banco.validarLogin(id,password);
 
           if(usuario!=null){
+              Sesion sesion = Sesion.getInstancia();
+              sesion.setUsuario(usuario);
+
              navegarVentana("/panelCliente.fxml", "Banco - login", usuario);
           }
 
@@ -86,8 +90,8 @@ public class LoginControlador {
             Parent root = loader.load();
 
             //Accedemos al controlador del panel cliente
-            PanelClienteControlador controlador = loader.getController();
-            controlador.inicializarValores(usuario);
+            //PanelClienteControlador controlador = loader.getController();
+            //controlador.inicializarValores(usuario);
 
             // Crear la escena
             Scene scene = new Scene(root);
